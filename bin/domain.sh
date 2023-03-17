@@ -14,6 +14,8 @@ help_message(){
     echo "${EPACE}${EPACE}Example: domain.sh -A example.com, will add the domain to Listener and auto create a new virtual host."
     echow "-D, --del [domain_name]"
     echo "${EPACE}${EPACE}Example: domain.sh -D example.com, will delete the domain from Listener."
+    echow "-m, --make [domain_name]"
+    echo "${EPACE}${EPACE}Example: domain.sh -M example.com, will create diretories for domain from Listener."
     echow '-H, --help'
     echo "${EPACE}${EPACE}Display help and exit."    
 }
@@ -40,6 +42,11 @@ del_domain(){
     bash bin/webadmin.sh -r
 }
 
+make_dir(){
+    check_input ${1}
+    docker compose exec ${CONT_NAME} su -s /bin/bash lsadm -c "cd /usr/local/lsws/conf && mkdir -p sites/${1}/{html,logs,certs,conf} && chown lsadm:lsadm sites/${1}/conf"
+}
+
 check_input ${1}
 while [ ! -z "${1}" ]; do
     case ${1} in
@@ -51,6 +58,9 @@ while [ ! -z "${1}" ]; do
             ;;
         -[dD] | -del | --del | --delete) shift
             del_domain ${1}
+            ;;          
+        -[mM] | -make | --make | --make) shift
+            make_dir ${1}
             ;;          
         *) 
             help_message
