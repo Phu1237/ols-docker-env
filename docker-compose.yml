@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    image: mariadb:10.5.9
+    image: mariadb:latest
     logging:
       driver: none
     command: --max_allowed_packet=256M
@@ -32,6 +32,7 @@ services:
       - 80:80
       - 443:443
       - 443:443/udp
+      - 8088:8088
       - 7080:7080
     restart: always
     environment:
@@ -39,7 +40,7 @@ services:
     networks:
       - default
   phpmyadmin:
-    image: bitnami/phpmyadmin:5.2.0-debian-11-r43
+    image: bitnami/phpmyadmin:latest
     ports:
       - 8080:8080
       - 8443:8443
