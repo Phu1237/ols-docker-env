@@ -1,7 +1,7 @@
 # OpenLiteSpeed WordPress Docker Container
 [![Build Status](https://github.com/litespeedtech/ols-docker-env/workflows/docker-build/badge.svg)](https://github.com/litespeedtech/ols-docker-env/actions/)
 [![docker pulls](https://img.shields.io/docker/pulls/litespeedtech/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/litespeedtech/openlitespeed)
-[<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack) 
+[<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
 [<img src="https://img.shields.io/twitter/follow/litespeedtech.svg?label=Follow&style=social">](https://twitter.com/litespeedtech)
 
 Install a lightweight WordPress container with OpenLiteSpeed Edge or Stable version based on Ubuntu 22.04 Linux.
@@ -12,7 +12,7 @@ Install a lightweight WordPress container with OpenLiteSpeed Edge or Stable vers
 
 ## Configuration
 Edit the `.env` file to update the demo site domain, default MySQL user, and password.
-Feel free to check [Docker hub Tag page](https://hub.docker.com/repository/docker/litespeedtech/openlitespeed/tags) if you want to update default openlitespeed and php versions. 
+Feel free to check [Docker hub Tag page](https://hub.docker.com/repository/docker/litespeedtech/openlitespeed/tags) if you want to update default openlitespeed and php versions.
 
 ## Installation
 Clone this repository or copy the files from this repository into a new folder:
@@ -41,7 +41,7 @@ The docker image installs the following packages on your system:
 |phpMyAdmin|[Latest from dockerhub](https://hub.docker.com/r/bitnami/phpmyadmin/)|
 
 ## Data Structure
-Cloned project 
+Cloned project
 ```bash
 ├── acme
 ├── bin
@@ -65,7 +65,7 @@ Cloned project
 
   * `acme` contains all applied certificates from Lets Encrypt
 
-  * `bin` contains multiple CLI scripts to allow you add or delete virtual hosts, install applications, upgrade, etc 
+  * `bin` contains multiple CLI scripts to allow you add or delete virtual hosts, install applications, upgrade, etc
 
   * `data` stores the MySQL database
 
@@ -85,7 +85,7 @@ You can run with daemon mode, like so:
 ```
 docker compose up -d
 ```
-The container is now built and running. 
+The container is now built and running.
 ### Stopping a Container
 ```
 docker compose stop
@@ -94,6 +94,10 @@ docker compose stop
 To stop and remove all containers, use the `down` command:
 ```
 docker compose down
+```
+### Container bash
+```
+docker exec -it ols-docker-env-litespeed-1 bash
 ```
 ### Setting the WebAdmin Password
 We strongly recommend you set your personal password right away.
@@ -104,6 +108,14 @@ bash bin/webadmin.sh my_password
 After running the following command, you should be able to access the WordPress installation with the configured domain. By default the domain is http://localhost.
 ```
 bash bin/demosite.sh
+```
+### Creating Domain files
+```
+bash bin/domain.sh [-M, --make] example.com
+```
+### Cleaning Domain files
+```
+bash bin/domain.sh [-C, --clean] example.com
 ```
 ### Creating a Domain and Virtual Host
 ```
@@ -128,8 +140,8 @@ To preconfigure the `wp-config` file, run the `database.sh` script for your doma
 ```
 ./bin/appinstall.sh [-A, --app] wordpress [-D, --domain] example.com
 ```
-### Install ACME 
-We need to run the ACME installation command the **first time only**. 
+### Install ACME
+We need to run the ACME installation command the **first time only**.
 With email notification:
 ```
 ./bin/acme.sh [-I, --install] [-E, --email] EMAIL_ADDR
@@ -144,13 +156,13 @@ Other parameters:
 
   * [`-r`, `--renew`]: Renew a specific domain with -D or --domain parameter if posibile. To force renew, use -f parameter.
 
-  * [`-R`, `--renew-all`]: Renew all domains if possible. To force renew, use -f parameter.  
+  * [`-R`, `--renew-all`]: Renew all domains if possible. To force renew, use -f parameter.
 
-  * [`-f`, `-F`, `--force`]: Force renew for a specific domain or all domains. 
+  * [`-f`, `-F`, `--force`]: Force renew for a specific domain or all domains.
 
-  * [`-v`, `--revoke`]: Revoke a domain.  
+  * [`-v`, `--revoke`]: Revoke a domain.
 
-  * [`-V`, `--remove`]: Remove a domain.   
+  * [`-V`, `--remove`]: Remove a domain.
 
 ### Update Web Server
 To upgrade the web server to latest stable version, run the following:
@@ -158,27 +170,66 @@ To upgrade the web server to latest stable version, run the following:
 bash bin/webadmin.sh [-U, --upgrade]
 ```
 ### Apply OWASP ModSecurity
-Enable OWASP `mod_secure` on the web server: 
+Enable OWASP `mod_secure` on the web server:
 ```
 bash bin/webadmin.sh [-M, --mod-secure] enable
 ```
-Disable OWASP `mod_secure` on the web server: 
+Disable OWASP `mod_secure` on the web server:
 ```
 bash bin/webadmin.sh [-M, --mod-secure] disable
 ```
 >Please ignore ModSecurity warnings from the server. They happen if some of the rules are not supported by the server.
+## Fast Install
+```
+git clone https://github.com/Phu1237/ols-docker-env.git
+cd ols-docker-env
+docker compose up -d
+bash bin/webadmin.sh -M enable
+bash bin/webadmin.sh 123456
+bash bin/domain.sh -m <your domain>
+```
+## Fast Reinstall
+```
+cd ~/ols-docker-env
+docker compose down
+cd ../
+rm -rf ols-docker-env
+git clone https://github.com/Phu1237/ols-docker-env.git
+cd ols-docker-env
+docker compose up -d
+bash bin/webadmin.sh -M enable
+bash bin/webadmin.sh 123456
+bash bin/domain.sh -M <your domain>
+```
+### Install Composer
+```
+docker exec -it ols-docker-env-litespeed-1 bash
+bash composerinstall.sh
+```
+### Install Laravel in html directory
+```
+composer create-project laravel/laravel --prefer-dist .
+chmod -R 0777 storage/
+chmod -R 0777 bootstrap/cache/
+```
+## Remove Example files
+```
+docker exec -it ols-docker-env-litespeed-1 bash
+cd /usr/local/lsws && rm -rf Example && rm -rf conf/vhost/Example
+```
+
 ### Accessing the Database
 After installation, you can use phpMyAdmin to access the database by visiting `http://127.0.0.1:8080` or `https://127.0.0.1:8443`. The default username is `root`, and the password is the same as the one you supplied in the `.env` file.
 
 ## Customization
-If you want to customize the image by adding some packages, e.g. `lsphp80-pspell`, just extend it with a Dockerfile. 
-1. We can create a `custom` folder and a `custom/Dockerfile` file under the main project. 
+If you want to customize the image by adding some packages, e.g. `lsphp80-pspell`, just extend it with a Dockerfile.
+1. We can create a `custom` folder and a `custom/Dockerfile` file under the main project.
 2. Add the following example code to `Dockerfile` under the custom folder
 ```
 FROM litespeedtech/openlitespeed:latest
 RUN apt-get update && apt-get install lsphp80-pspell -y
 ```
-3. Add `build: ./custom` line under the "image: litespeedtech" of docker-composefile. So it will looks like this 
+3. Add `build: ./custom` line under the "image: litespeedtech" of docker-composefile. So it will looks like this
 ```
   litespeed:
     image: litespeedtech/openlitespeed:${OLS_VERSION}-${PHP_VERSION}
@@ -195,4 +246,4 @@ If you still have a question after using OpenLiteSpeed Docker, you have a few op
 * Post to [the OpenLiteSpeed Forums](https://forum.openlitespeed.org/) for community support
 * Reporting any issue on [Github ols-docker-env](https://github.com/litespeedtech/ols-docker-env/issues) project
 
-**Pull requests are always welcome** 
+**Pull requests are always welcome**
