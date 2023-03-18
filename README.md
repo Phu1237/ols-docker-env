@@ -56,6 +56,7 @@ Cloned project
 ├── lsws
 │   ├── admin-conf
 │   └── conf
+│       └── sites (all your virtual host sources should be in here)
 ├── sites
 │   └── localhost
 ├── LICENSE

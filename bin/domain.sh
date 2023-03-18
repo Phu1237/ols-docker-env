@@ -19,7 +19,7 @@ help_message(){
     echow "-c, --clean [domain_name]"
     echo "${EPACE}${EPACE}Example: domain.sh -C example.com, will remove diretories and config file of domain from Listener."
     echow '-H, --help'
-    echo "${EPACE}${EPACE}Display help and exit."    
+    echo "${EPACE}${EPACE}Display help and exit."
 }
 
 check_input(){
@@ -32,7 +32,7 @@ check_input(){
 add_domain(){
     check_input ${1}
     docker compose exec ${CONT_NAME} su -s /bin/bash lsadm -c "cd /usr/local/lsws/conf && domainctl.sh --add ${1}"
-    if [ ! -d "./sites/${1}" ]; then 
+    if [ ! -d "./sites/${1}" ]; then
         mkdir -p ./sites/${1}/{html,logs,certs}
     fi
     bash bin/webadmin.sh -r
@@ -47,6 +47,13 @@ del_domain(){
 make_dir(){
     check_input ${1}
     docker compose exec ${CONT_NAME} su -s /bin/bash lsadm -c "cd /usr/local/lsws/conf && mkdir -p sites/${1}/{html,logs,certs,conf} && chown lsadm:lsadm sites/${1}/conf"
+    echo "Please create new Virtual host on your LiteSpeed WebAdmin Console with above information"
+    echo "! Virtual Host Root: sites/${1}"
+    echo "! Config File: \$SERVER_ROOT/conf/vhosts/${1}/vhconf.conf"
+    echo "! Document Root: \$VH_ROOT/html/"
+    echo "! Domain Name: ${1}"
+    echo "! Domain Allias: www.${1} (if needed)"
+    echo "And remember to add created Virtual host to Listeners 80 and 443"
 }
 
 clean(){
@@ -65,17 +72,16 @@ while [ ! -z "${1}" ]; do
             ;;
         -[dD] | -del | --del | --delete) shift
             del_domain ${1}
-            ;;          
+            ;;
         -[mM] | -make | --make) shift
             make_dir ${1}
-            ;;          
+            ;;
         -[cC] | -clean | --clean) shift
             clean ${1}
-            ;;          
-        *) 
+            ;;
+        *)
             help_message
-            ;;              
+            ;;
     esac
     shift
 done
-          
