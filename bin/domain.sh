@@ -48,8 +48,8 @@ make_dir(){
     check_input ${1}
     docker compose exec ${CONT_NAME} su -s /bin/bash lsadm -c "cd /usr/local/lsws/conf && mkdir -p sites/${1}/{html,logs,certs,conf} && chown lsadm:lsadm sites/${1}/conf"
     echo "Please create new Virtual host on your LiteSpeed WebAdmin Console with above information"
-    echo " ! Virtual Host Name: ${1}"
-    echo "! Virtual Host Root: sites/${1}/"
+    echo "! Virtual Host Name: ${1}"
+    echo "! Virtual Host Root: conf/sites/${1}/"
     echo "! Config File: \$SERVER_ROOT/conf/vhosts/\$VH_NAME/vhconf.conf"
     echo "! Document Root: \$VH_ROOT/html/"
     echo "! Domain Name: ${1}"
