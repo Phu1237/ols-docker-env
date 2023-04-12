@@ -24,7 +24,6 @@ services:
     volumes:
       - ./lsws/conf:/usr/local/lsws/conf
       - ./lsws/admin-conf:/usr/local/lsws/admin/conf
-      - ./sites:/var/www/vhosts/
       - ./bin/container:/usr/local/bin
       - ./acme:/root/.acme.sh/
       - ./logs:/usr/local/lsws/logs/
@@ -45,7 +44,7 @@ services:
       - 8080:8080
       - 8443:8443
     environment:
-        DATABASE_HOST: mysql
+      DATABASE_HOST: mysql
     restart: always
     networks:
       - default

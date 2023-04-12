@@ -74,7 +74,7 @@ Cloned project
 
   * `lsws` contains all web server configuration files
 
-  * `sites` contains the document roots (the WordPress application will install here)
+  * `lsws/conf/sites` contains the files of all sites
 
 ## Usage
 ### Starting a Container
