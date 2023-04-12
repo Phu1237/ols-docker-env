@@ -216,7 +216,7 @@ chmod -R 0777 bootstrap/cache/
 ## Remove Example files
 ```
 docker exec -it ols-docker-env-litespeed-1 bash
-cd /usr/local/lsws && rm -rf Example && rm -rf conf/vhost/Example
+cd /usr/local/lsws && rm -rf Example && rm -rf conf/vhosts/Example
 ```
 
 ### Accessing the Database
